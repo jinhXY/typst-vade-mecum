@@ -1,18 +1,18 @@
 # for a description of available keys, see https://github.com/typst/packages/?tab=readme-ov-file#package-format
 
 [package]
-name = ""
+name = "vade-mecum"
 version = "0.1.0"
-entrypoint = "src/lib.typ"
-authors = []
+entrypoint = "src/template.typ"
+authors = ["<@jinhXY>"]
 license = "Unlicense"
-description = ""
+description = "My personal master template/package for all things Typst"
 homepage = ""
-repository = ""
+repository = "https://github.com/jinhXY/typst-vade-mecum"
 keywords = []
 categories = []
 disciplines = []
-# compiler = ""
+compiler = "0.15.1"
 exclude = [
   ".github",
   "docs",
