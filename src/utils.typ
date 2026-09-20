@@ -1,25 +1,29 @@
 /// Checks if a Content is empty (i.e., has no text)
-///
-/// - h (content): The content to check.
-/// -> bool Whether the content is empty or not.
-#let is-content-empty(h) = {
+/// -> bool
+#let is-content-empty(
+    /// The content to check. -> content
+    h,
+) = {
     [#h].at("children", default: ()) == ()
 }
 
 /// Checks if a content is non-empty (i.e., has text)
-///
-/// - it (content | str): The content to check.
-/// -> bool Whether the content is non-empty or not.
-#let is-content-non-empty(it) = {
+/// -> bool
+#let is-content-non-empty(
+    /// The content to check. -> content | str
+    it,
+) = {
     return it != none and it != [] and it != ""
 }
 
 /// Creates a table from a list of columns, as opposed to a list of rows.
-///
-/// - kwargs (arguments): Additional keyword arguments to pass to the table function.
-/// - columns (arguments): The columns to use for the table. Each column should be a list of cells.
-/// -> content The resulting table content.
-#let table_from_columns(kwargs, ..columns) = {
+/// -> content
+#let table_from_columns(
+    /// Additional keyword arguments to pass to the table function. -> arguments | none
+    kwargs,
+    /// The columns to use for the table. Each column should be a list of cells. -> content
+    ..columns,
+) = {
     columns = columns.pos()
     let first = columns.at(0)
     let others = columns.slice(1)
@@ -38,25 +42,32 @@
 }
 
 /// Rounds a number to a specified precision and returns it as a string.
-///
-/// - value (number): The number to round.
-/// - precision (int): The number of decimal places to round to. Defaults to 3.
-/// -> str The rounded number as a string.
-#let int_round(value, precision: 3) = {
+/// -> str
+#let int_round(
+    /// The number to round. -> number
+    value,
+    /// The number of decimal places to round to. -> int
+    precision: 3,
+) = {
     import "@preview/oxifmt:1.0.0": strfmt
     strfmt("{0:." + str(precision) + "}", float(value))
 }
 
 /// Creates a table from a 2D array of data, with optional headers for the rows and columns.
-///
-/// - header_up (list): The header for the columns (top row).
-/// - header_side (list): The header for the rows (first column).
-/// - data (list): The 2D array of data to populate the table.
-/// - kwargs (arguments | none): Additional keyword arguments to pass to the table function.
-//    If `none`, defaults to center alignment and equal column widths.
-/// - precision (int): The number of decimal places to round the data to. Defaults to 3.
-/// ->
-#let float_table_from_2d-array(header_up, header_side, data, kwargs: none, precision: 3) = {
+/// -> content
+#let float_table_from_2d-array(
+    /// The header for the columns (top row). -> array<content | string>
+    header_up,
+    /// The header for the rows (first column). -> array<content | string>
+    header_side,
+    /// The 2D array of data to populate the table. -> array<content>
+    data,
+    /// Additional keyword arguments to pass to the table function.
+    /// If `none`, defaults to center alignment and equal column widths. -> arguments | none
+    kwargs: none,
+    /// The number of decimal places to round the data to. -> int
+    precision: 3,
+) = {
     if kwargs == none {
         kwargs = arguments(
             align: center,
@@ -78,5 +89,21 @@
                 },
             )
             .flatten()
+    )
+}
+
+/// Returns a code block with the contents of a file, using the filename
+/// as the header and its extension as the language for syntax highlighting.
+/// The code block is breakable, allowing it to span multiple pages if necessary.
+/// -> content
+#let code-block(
+    /// The path to the file to read. -> path
+    filename,
+) = {
+    codly(breakable: true, header: [#filename])
+    raw(
+        read(filename),
+        block: true,
+        lang: filename.split(".").at(-1),
     )
 }

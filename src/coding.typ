@@ -1,15 +1,5 @@
 #import "@preview/codly:1.3.0": *
 
-// Code block from file
-#let code-block(filename) = {
-    codly(breakable: true, header: [#filename])
-    raw(
-        read(filename),
-        block: true,
-        lang: filename.split(".").at(-1),
-    )
-}
-
 #let code-conf(doc, opts) = {
     // code font settings
     show raw: set text(font: opts.code-font, size: opts.code-font-size)

@@ -3,6 +3,7 @@
 #import "settings.typ": *
 #import "coding.typ": *
 #import "math.typ": *
+#import "utils.typ": *
 
 #let default-conf(doc, opts) = {
     set text(
@@ -33,12 +34,12 @@
     set page(
         margin: opts.hydra-margins,
         header: context {
-            import "@preview/hydra:0.6.2": hydra
+            import "@preview/hydra:0.6.3": hydra
             let h1 = hydra(1)
             let h2 = hydra(2)
 
             // Check if empty to avoid random lines appearing when hydra is not used
-            if not is_content_empty(h1) or not is_content_empty(h2) {
+            if not is-content-empty(h1) or not is-content-empty(h2) {
                 [#h1 #h(1fr) #h2]
                 line(length: 100%)
             }
@@ -95,7 +96,7 @@
         let elem = it.element
         if elem == none { return it }
 
-        if elem.func() == metadata and elem.func() == math.equation {
+        if elem.func() == metadata or elem.func() == math.equation {
             // Numbered math equations. Display the equation number
             link(elem.location(), numbering(
                 elem.numbering,
@@ -117,7 +118,7 @@
 #let template-conf(doc, opts) = {
     show: doc => default-conf(doc, opts)
     show: doc => code-conf(doc, opts)
-    show: doc => math_conf(doc, opts)
+    show: doc => math-conf(doc, opts)
 
     doc
 }

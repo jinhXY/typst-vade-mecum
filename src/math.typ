@@ -59,7 +59,7 @@
 #let remark = frame("Remark", orange, kind: "remark")
 #let proof = frame("Proof", black, kind: "proof")
 
-#let math_conf(doc, opts) = {
+#let math-conf(doc, opts) = {
     show math.equation: set text(font: opts.math-font)
 
     // Breakable equations
