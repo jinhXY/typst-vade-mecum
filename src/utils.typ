@@ -4,16 +4,16 @@
     /// The content to check. -> content
     h,
 ) = {
-    [#h].at("children", default: ()) == ()
+    return h == none or h == [] or h == ""
 }
 
 /// Checks if a content is non-empty (i.e., has text)
 /// -> bool
 #let is-content-non-empty(
     /// The content to check. -> content | str
-    it,
+    h,
 ) = {
-    return it != none and it != [] and it != ""
+    return not is-content-empty(h)
 }
 
 /// Creates a table from a list of columns, as opposed to a list of rows.
@@ -95,15 +95,30 @@
 /// Returns a code block with the contents of a file, using the filename
 /// as the header and its extension as the language for syntax highlighting.
 /// The code block is breakable, allowing it to span multiple pages if necessary.
+///
+/// NOTE: The language detection based on the file extension currently does NOT
+/// work. Prior to Typst 0.15, paths did not exist and thus the user had to pass
+/// the raw contents of the file to this function, along with the file name. Now,
+/// path support exists, but no operations are allowed with them, including
+/// extracting their string representation. For now, the extension will have to
+/// be manually specified
 /// -> content
 #let code-block(
     /// The path to the file to read. -> path
     filename,
+    /// Extension of the file to use for syntax highlighting.
+    /// If empty, no syntax highlighting will be applied. -> str
+    lang: "",
 ) = {
-    codly(breakable: true, header: [#filename])
-    raw(
-        read(filename),
+    import "@preview/codly:1.3.0": *
+
+    let args = arguments(
         block: true,
-        lang: filename.split(".").at(-1),
     )
+    if lang != "" {
+        args = args + arguments(lang: lang)
+    }
+
+    codly(breakable: true, header: [#filename])
+    raw(read(filename), ..args)
 }
