@@ -2,16 +2,36 @@
 #import "@preview/headcount:0.1.0": dependent-numbering, reset-counter
 
 /// Frame style that adds pre and post content around the given style.
-#let pre-post-style(pre_content, style, post_content) = {
-    (title, tags, body, supplement, number, arg) => {
-        [
-            #pre_content
+#let pre-post-style(
+    /// The content to add before the frame.
+    /// It can be either a fixed content or a function with the same
+    /// signature as the style function:
+    /// `(title, tags, body, supplement, number, arg) => content` -> content | function | none
+    pre_content,
+    /// The frame style to wrap. It should have the signature
+    /// `(title, tags, body, supplement, number, arg) => content` -> function
+    style,
+    /// The content to add after the frame.
+    /// It can be either a fixed content or a function with the same
+    /// signature as the style function:
+    /// `(title, tags, body, supplement, number, arg) => content` -> content | function | none
+    post_content,
+) = {
+    (title, tags, body, supplement, number, arg) => [
+        #if type(pre_content) == function {
+            pre_content(title, tags, body, supplement, number, arg)
+        } else {
+            pre_content
+        }
 
-            #style(title, tags, body, supplement, number, arg)
+        #style(title, tags, body, supplement, number, arg)
 
-            #post_content
-        ]
-    }
+        #if type(post_content) == function {
+            post_content(title, tags, body, supplement, number, arg)
+        } else {
+            post_content
+        }
+    ]
 }
 
 /// No-frame style that omits the title.
