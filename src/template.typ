@@ -68,27 +68,23 @@
         }
     }
 
-    // Outline styling
-    show outline.entry.where(level: 1): it => {
-        v(12pt, weak: true)
-        strong(it)
-    }
-    set outline.entry(fill: line(length: 100%, stroke: .2pt + gray))
-
-    // Figure outline styling
-    show outline.entry: it => {
-        // use native behavior for non-figures
-        if it.element.func() != figure { return it }
-        // we display just the counter, no supplement
-        context {
-            let numbers = it.element.counter.at(it.element.location())
-            let numbered = numbering(it.element.numbering, ..numbers)
-
-            link(
-                it.element.location(),
-                it.indented(numbered + ".", it.inner()),
-            )
-        }
+    // Attach each figure with its numbering pattern. This allows it
+    // to be recovered in other places (like the outline) when the
+    // numbering function depends on the location (like dependent-numbering).
+    // Otherwise, the numbering could evaluate to an incorrect value if the
+    // access to the numbering is not in the same location as when it was numbered.
+    show figure: it => {
+        context [
+            #metadata(
+                if it.numbering != none {
+                    numbering(
+                        it.numbering,
+                        ..it.counter.at(it.location()),
+                    )
+                } else { none },
+            ) <rendered-figure-number>
+        ]
+        it
     }
 
     // Reference styling

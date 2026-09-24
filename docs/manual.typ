@@ -10,7 +10,11 @@
 
 #align(center, text(20pt)[*Vade Mecum User Guide*])
 
-#outline(title: none)
+#advanced-outline(
+    title: none,
+    max_bold_headings_level: 1,
+    targets: (heading, figure.where(kind: "setting")),
+)
 
 #pagebreak()
 = Getting started
@@ -56,38 +60,27 @@ This package is a personal all-in-one Typst template, with the following feature
         "https://typst.app/universe/package/frame-it/",
     )[frame-it] frames. See @custom-environments for an example, and see @frame-styles for the
     reference.
+- A function `advanced-outline` for building more advanced outlines that are better integrated with
+    the other features of this package.
 
 = Available settings <settings>
 
+#let setting = frame("", blue, kind: "setting")
 #show: doc => setup-frame-environment(
     doc,
     "setting",
     styles.thmbox,
-    numbering: none,
-    levels: 0,
+    numbering: "1.1",
+    levels: 1,
     breakable: false,
 )
 
-#let setting-box(name, doc, type, default) = {
-    let setting = frame("", blue, kind: "setting")
-    show heading: hide
-
-    heading(depth: 2)[#raw(name)]
-    v(-2em)
-    setting[#raw(name)][
-        *Type:* #type \
-        #doc \
-        *Default value:* #default
-    ]
-}
-
 #let data = e.data(settings)
-#let boxes = data.fields.optional-named-fields.map(f => setting-box(
-    f.name,
-    f.doc,
-    f.typeinfo.name,
-    f.default,
-))
+#let boxes = data.fields.optional-named-fields.map(f => setting[#raw(f.name)][
+    *Type:* #f.typeinfo.name \
+    #f.doc \
+    *Default value:* #f.default
+])
 #for box in boxes { box }
 
 = Utilities <utilities>
