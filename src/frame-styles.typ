@@ -53,8 +53,8 @@
     ]
 }
 
-/// Setup environment for figures using frame-it
-///
+/// Setup environment for figures using frame-it. Since this applies show rules,
+/// it requires to be called like this: `#show: doc => setup-frame-environment(doc, ...)`
 /// -> none
 #let setup-frame-environment(
     /// The document content to configure. -> content
@@ -76,22 +76,17 @@
     /// The alignment of the figure content. Options are `left`, `center`, `right`. -> enum
     alignment: left,
 ) = {
+    let number_pattern = if numbering != none {
+        dependent-numbering(numbering, levels: levels)
+    } else {
+        none
+    }
+
     show: frame-style(kind: kind, style)
     show figure.where(kind: kind): set align(alignment)
     show figure.where(kind: kind): set block(breakable: breakable)
+    show figure.where(kind: kind): set figure(numbering: number_pattern)
+    show heading: reset-counter(counter(figure.where(kind: kind)))
 
-    if numbering != none {
-        show figure.where(kind: kind): set figure(
-            numbering: dependent-numbering(
-                numbering,
-                levels: levels,
-            ),
-        )
-        show heading: reset-counter(counter(figure.where(kind: kind)))
-
-        doc
-    } else {
-        show figure.where(kind: kind): set figure(numbering: none)
-        doc
-    }
+    doc
 }

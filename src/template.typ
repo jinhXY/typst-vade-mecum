@@ -46,19 +46,14 @@
         },
     ) if opts.use-hydra
 
-    show heading.where(level: 1): it => {
-        if opts.use-hydra and not in-outline.get() {
-            pagebreak(weak: true) + it
-        } else {
-            it
-        }
-    }
+    show heading.where(level: 1): it => if opts.use-hydra {
+        pagebreak(weak: true) + it
+    } else { it }
 
     // Link styling (both the web and internally)
     show link: it => {
-        if in-outline.get() {
-            return it
-        }
+        // We use the default one in outline
+        if in-outline.get() { return it }
 
         if type(it.dest) != str {
             text(it, fill: red)

@@ -186,7 +186,7 @@ The following shows an example usage of the math environments provided by this p
 	#proof[][
 	    If $v = 0$ the claim is trivial. Otherwise, for any scalar $t$,
 	    $ 0 <= norm(u - t v)^2 = norm(u)^2 - 2 t chevron.l u, v chevron.r + t^2 norm(v)^2, $
-	    and choosing $t = sfrac((chevron.l u, v chevron.r, norm(v)^2))$ yields the result.
+	    and choosing $t = sfrac((chevron.l u, v chevron.r) / norm(v)^2)$ yields the result.
 	]
 ] <thm:cs>
 
@@ -203,7 +203,7 @@ The following shows an example usage of the math environments provided by this p
 
 #remark[Calligraphic and blackboard letters][
     Script letters: $scr(F), scr(G), scr(P)(X)$. Blackboard letters: $AA, BB, PP, EE, RR^n$.
-    Fractions: $sfrac((1, 2))$ (skewed) and $hfrac((1, 2))$ (horizontal).
+    Fractions: $sfrac(1 / 2)$ (skewed) and $hfrac(1 / 2)$ (horizontal).
 ]
 ````
 
