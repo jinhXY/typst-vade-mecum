@@ -9,7 +9,7 @@
         assert.eq(s.font-size, 14pt)
         assert.eq(s.lang, "fr")
         // Untouched fields keep their defaults.
-        assert.eq(s.font, "Linux Libertine O")
+        assert.eq(s.font, ("Linux Libertine O", "Libertinus Serif"))
         assert.eq(s.use-hydra, false)
     })
 }

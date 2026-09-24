@@ -21,9 +21,9 @@
         ),
         e.field(
             "font",
-            str,
+            e.types.union(str, array, dictionary),
             doc: "Main font of the document. Does not apply to Math mode nor Raw mode.",
-            default: "Linux Libertine O",
+            default: ("Linux Libertine O", "Libertinus Serif"),
         ),
         e.field(
             "font-size",
@@ -87,9 +87,9 @@
         // Code conf
         e.field(
             "code-font",
-            str,
+            e.types.union(str, array, dictionary),
             doc: "Font used for code blocks.",
-            default: "FiraCode Nerd Font",
+            default: ("FiraCode Nerd Font", "DejaVu Sans Mono"),
         ),
         e.field(
             "code-font-size",
@@ -119,9 +119,9 @@
         // Math conf
         e.field(
             "math-font",
-            str,
+            e.types.union(str, array, dictionary),
             doc: "Font used for mathematical content.",
-            default: "Erewhon Math",
+            default: ("Erewhon Math", "New Computer Modern Math"),
         ),
         e.field(
             "math-counter-levels",

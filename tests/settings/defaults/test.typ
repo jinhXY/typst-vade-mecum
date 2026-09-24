@@ -8,7 +8,7 @@
 
     // Default conf
     assert.eq(s.lang, "en")
-    assert.eq(s.font, "Linux Libertine O")
+    assert.eq(s.font, ("Linux Libertine O", "Libertinus Serif"))
     assert.eq(s.font-size, 12pt)
     assert.eq(s.heading-numbering, "1.1.")
     assert.eq(s.page-numbering, "1")
@@ -19,7 +19,7 @@
     assert.eq(s.justify, true)
 
     // Code conf
-    assert.eq(s.code-font, "FiraCode Nerd Font")
+    assert.eq(s.code-font, ("FiraCode Nerd Font", "DejaVu Sans Mono"))
     assert.eq(s.code-font-size, 9pt)
     assert.eq(s.code-bg-color, rgb("#F6F8FA"))
     assert.eq(type(s.codly-config), arguments)
@@ -27,7 +27,7 @@
     assert.eq(type(s.syntax-theme), path)
 
     // Math conf
-    assert.eq(s.math-font, "Erewhon Math")
+    assert.eq(s.math-font, ("Erewhon Math", "New Computer Modern Math"))
     assert.eq(s.math-counter-levels, 0)
     assert.eq(s.math-numbering, "1.1")
 
