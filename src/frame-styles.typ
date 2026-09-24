@@ -70,11 +70,11 @@
     numbering: "1.1",
     /// The number of levels to use for dependent numbering.
     /// If `numbering` is `none`, this is ignored. -> int
-    levels: 1,
+    levels: 0,
     /// Whether the figure should be breakable across pages. -> bool
     breakable: true,
     /// The alignment of the figure content. Options are `left`, `center`, `right`. -> enum
-    alignment: center,
+    alignment: left,
 ) = {
     show: frame-style(kind: kind, style)
     show figure.where(kind: kind): set align(alignment)
