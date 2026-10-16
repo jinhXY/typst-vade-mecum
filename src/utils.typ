@@ -50,7 +50,7 @@
     precision: 3,
 ) = {
     import "@preview/oxifmt:1.0.0": strfmt
-    strfmt("{0:." + str(precision) + "}", float(value))
+    strfmt("{0:." + str(precision) + "}", value)
 }
 
 /// Creates a table from a 2D array of data, with optional headers for the rows and columns.
