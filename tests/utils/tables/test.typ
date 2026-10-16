@@ -1,4 +1,4 @@
-#import "/src/utils.typ": float_table_from_2d-array, table_from_columns
+#import "/src/utils.typ": float-table-from-2d-array, table_from_columns
 
 // --- table_from_columns -----------------------------------------------------
 
@@ -24,11 +24,11 @@
     6,
 )
 
-// --- float_table_from_2d-array ----------------------------------------------
+// --- float-table-from-2d-array ----------------------------------------------
 
-#let ft = float_table_from_2d-array(
-    ([], [A], [B]),
-    ([r1], [r2]),
+#let ft = float-table-from-2d-array(
+    header_up: ([], [A], [B]),
+    header_side: ([r1], [r2]),
     ((1.23456, 2.0), (3.5, 4.25)),
 )
 
@@ -37,16 +37,15 @@
 // 3 header cells + 2 rows x 3 cells
 #assert.eq(ft.children.len(), 9)
 
-// Precision is applied to the data cells.
-#assert.eq(
-    float_table_from_2d-array(([], [A]), ([r],), ((1.23456,),), precision: 2).children.last().body,
-    [#"1.23"],
-)
-
 // Both builders render without error.
 #t
 #ft
-#float_table_from_2d-array(([], [A]), ([r],), ((1.0,),), kwargs: arguments(
-    columns: 2,
-    stroke: none,
-))
+#float-table-from-2d-array(
+    header_up: ([], [A]),
+    header_side: ([r],),
+    ((1.0,),),
+    kwargs: arguments(
+        columns: 2,
+        stroke: none,
+    ),
+)

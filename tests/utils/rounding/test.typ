@@ -9,8 +9,8 @@
 #assert.eq(int_round(1.23456, precision: 1), "1.2")
 #assert.eq(int_round(1.23456, precision: 5), "1.23456")
 
-// Integers are accepted and converted to float.
-#assert.eq(int_round(2, precision: 2), "2.00")
+// Integers are kept as is.
+#assert.eq(int_round(2, precision: 2), "2")
 
 // Negative numbers keep their sign.
 #assert.eq(int_round(-1.005, precision: 2), "-1.00")
