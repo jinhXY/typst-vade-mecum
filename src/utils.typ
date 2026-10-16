@@ -55,38 +55,87 @@
 
 /// Creates a table from a 2D array of data, with optional headers for the rows and columns.
 /// -> content
-#let float_table_from_2d-array(
-    /// The header for the columns (top row). -> array<content | string>
-    header_up,
-    /// The header for the rows (first column). -> array<content | string>
-    header_side,
+#let float-table-from-2d-array(
     /// The 2D array of data to populate the table. -> array<content>
     data,
+    /// The header for the columns (top row).
+    /// If none, the table will have no header row.
+    /// -> array<content | string>
+    header_up: none,
+    /// The header for the rows (first column).
+    /// If none, the table will have no header column.
+    /// -> array<content | string>
+    header_side: none,
     /// Additional keyword arguments to pass to the table function.
     /// If `none`, defaults to center alignment and equal column widths. -> arguments | none
     kwargs: none,
     /// The number of decimal places to round the data to. -> int
     precision: 3,
 ) = {
+    if data == none {
+        data = ()
+    } else if type(data) != array {
+        panic("Data must be an array of arrays")
+    }
+
+    if not data.all(row => type(row) == array) {
+        panic("Data must be an array of arrays")
+    }
+
+    let num_of_rows = data.len()
+
+    // Merge the side header with the data to get the number of columns
+    if header_side == none {
+        // Nothing to do
+    } else if type(header_side) != array {
+        panic("Header side must be an array")
+    } else if header_side.len() != num_of_rows {
+        panic("Header side must have the same length as the number of rows in data")
+    } else {
+        data = data
+            .enumerate()
+            .map(
+                ((idx, row)) => (header_side.at(idx),) + row,
+            )
+    }
+
+    let lengths = data.map(row => row.len())
+    if lengths.len() > 0 and not lengths.all(length => length == lengths.at(0)) {
+        panic("All rows must have the same length")
+    }
+    let num_of_cols = if lengths.len() > 0 { lengths.at(0) } else { 0 }
+
+    // Merge the top header with the data to get the number of columns
+    if header_up == none {
+        // Nothing to do
+    } else if type(header_up) != array {
+        panic("Header up must be an array")
+    } else if header_up.len() != num_of_cols {
+        panic(
+            "Header up must have the same length as the number of columns in data (+ header side if present)",
+        )
+    } else {
+        data = (header_up,) + data
+    }
+
     if kwargs == none {
         kwargs = arguments(
             align: center,
-            columns: (1fr,) * header_up.len(),
+            columns: (1fr,) * num_of_cols,
         )
     }
 
     table(
         ..kwargs,
-        ..header_up,
         ..data
-            .enumerate()
             .map(
-                ((index, row)) => {
-                    (
-                        (header_side.at(index),)
-                            + row.map(cell => [#int_round(cell, precision: precision)])
-                    )
-                },
+                row => row.map(cell => {
+                    if type(cell) in (int, float) [
+                        #int_round(cell, precision: precision)
+                    ] else {
+                        cell
+                    }
+                }),
             )
             .flatten()
     )
