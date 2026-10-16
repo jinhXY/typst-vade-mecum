@@ -130,6 +130,8 @@
         ..data
             .map(
                 row => row.map(cell => {
+                    import "@preview/to-stuff:1.1.0" as to
+                    let cell = to.stuff(cell)
                     if type(cell) in (int, float) [
                         #int_round(cell, precision: precision)
                     ] else {
