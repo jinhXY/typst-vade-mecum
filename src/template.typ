@@ -1,4 +1,3 @@
-#import "@preview/big-todo:0.2.0": *
 #import "@preview/itemize:0.2.0" as itemize
 #import "settings.typ": *
 #import "coding.typ": *
@@ -29,6 +28,9 @@
         it
         in-outline.update(false)
     }
+
+    // Prevents TODOs from showing repeated text through the caption
+    show figure.where(kind: "todo"): it => it.body
 
     // Hydra settings
     set page(

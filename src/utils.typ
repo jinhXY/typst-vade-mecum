@@ -285,3 +285,49 @@
         target: selector.or(..targets),
     )
 }
+
+/// Creates an inline TODO figure with a red "TODO" label and the specified body text.
+/// -> content
+#let inline-todo(
+    /// The body text of the TODO figure. -> content
+    body,
+    /// The size of the "TODO" label. -> size
+    size: 1.5em,
+) = {
+    set text(fill: red, size: size, weight: "bold")
+    box([TODO: #body #place()[#figure(kind: "todo", supplement: "TODO", caption: body, [])]])
+}
+
+/// Creates a TODO figure with a red "TODO" label and the specified body text.
+/// -> content
+#let todo(
+    /// The body text of the TODO figure. -> content
+    body,
+    /// The size of the "TODO" label. -> size
+    big_text: 3em,
+    /// The size of the body text. -> size
+    small_text: 1em,
+    /// The alignment of the TODO figure. -> alignment
+    alignment: center,
+    /// The gap between the "TODO" label and the body text. -> size
+    gap: .25em,
+) = {
+    show figure: set align(alignment)
+    figure(kind: "todo", supplement: "TODO", outlined: true, caption: body)[
+        #block(text(fill: red, size: big_text, weight: "bold")[! TODO !])
+        #v(gap)
+        #block(text(fill: red, size: small_text, weight: "bold", body))
+        #v(gap)
+    ]
+}
+
+/// Creates an outline of all TODO figures in the document.
+/// -> content
+#let todo_outline(
+    /// Additional keyword arguments to pass to the advanced-outline function. -> arguments | none
+    ..kwargs,
+) = advanced-outline(
+    title: text(fill: red)[TODOs],
+    targets: (figure.where(kind: "todo"),),
+    ..kwargs,
+)

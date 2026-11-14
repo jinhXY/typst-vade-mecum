@@ -46,9 +46,10 @@ This package is a personal all-in-one Typst template, with the following feature
 - Includes #link("https://typst.app/universe/package/itemize")[Itemize]'s list/enum fixes and
     referencing (which is #link("https://github.com/typst/typst/issues/779")[still not possible in
         Typst])
-- Includes #link("https://typst.app/universe/package/big-todo/")[big-todo] for #todo(
-        inline: true,
-    )[notes] in the document.
+- Includes functions for #inline-todo[notes] in the document, including a TODO outline. Modified
+    from #link(
+        "https://typst.app/universe/package/big-todo/",
+    )[Big-Todo].
 - Uses #link("https://typst.app/universe/package/codly/")[Codly] with opinionated defaults for code
     blocks.
 - A bunch of utility functions. See @utilities for a list of available functions.
