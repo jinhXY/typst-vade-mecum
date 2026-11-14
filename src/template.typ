@@ -69,16 +69,14 @@
     // Otherwise, the numbering could evaluate to an incorrect value if the
     // access to the numbering is not in the same location as when it was numbered.
     show figure: it => {
-        context [
-            #metadata(
-                if it.numbering != none {
-                    numbering(
-                        it.numbering,
-                        ..it.counter.at(it.location()),
-                    )
-                } else { none },
-            ) <rendered-figure-number>
-        ]
+        if it.numbering != none {
+            context [
+                #metadata((
+                    loc: it.location(),
+                    number: numbering(it.numbering, ..it.counter.at(it.location())),
+                )) <rendered-figure-number>
+            ]
+        }
         it
     }
 

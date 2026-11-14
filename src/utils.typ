@@ -189,6 +189,9 @@
     /// if the outline is only for one kind of figure.
     /// -> bool | auto
     hide_figure_sup: auto,
+    /// The separator placed after the figure number when the supplement is hidden.
+    /// -> content | str
+    hidden_sup_separator: ".",
     /// The maximum level of headings to be displayed in bold in the outline.
     /// If set to `auto`, only the first level of headings will be bolded
     /// if the outline is only for headings. Otherwise, if other elements
@@ -202,33 +205,22 @@
     /// Additional keyword arguments to pass to Typst's built-in `outline` function.
     ..kwargs,
 ) = {
+    assert(
+        "target" not in kwargs.named(),
+        message: "use `targets` (an array) instead of `target`",
+    )
+
     // Bold headings
     let max_bold_headings_level = if max_bold_headings_level == auto {
         if targets != (heading,) { calc.inf } else { 1 }
     } else { max_bold_headings_level }
 
-    show outline.entry: it => {
-        if it.element.func() == heading and it.element.level <= max_bold_headings_level {
-            v(1em, weak: true)
-            strong(it)
-        } else { it }
-    }
-
     // Indent figures
+    // Note: this only detects bare element functions, not selectors
+    // such as `heading.where(level: 1)`.
     let indent_figures = if indent_figures == auto {
         heading in targets
     } else { indent_figures }
-
-    show outline.entry: it => if indent_figures {
-        if it.element.func() == figure {
-            let loc = it.element.location()
-            let depth = counter(heading).at(loc).len()
-            let bumped = outline.entry(depth + 1, it.element, fill: it.fill)
-            link(loc, bumped.indented(bumped.prefix(), bumped.inner()))
-        } else {
-            it
-        }
-    } else { it }
 
     // Hide figure supplement
     let hide_figure_sup = if hide_figure_sup == auto {
@@ -240,20 +232,52 @@
         targets.len() == 1
     } else { hide_figure_sup }
 
-    show outline.entry: it => if hide_figure_sup {
+    // We handle all entries in one rule, since stacking them runs the risk
+    // of one undesirably overriding or interfering with another.
+    show outline.entry: it => {
         let elem = it.element
-        if elem.func() != figure { return it }
+
+        // Bold headings
+        if elem.func() == heading {
+            return if elem.level <= max_bold_headings_level {
+                v(1em, weak: true)
+                strong(it)
+            } else { it }
+        }
+
+        if elem.func() != figure or not (indent_figures or hide_figure_sup) {
+            return it
+        }
 
         context {
-            let all-figs = query(figure)
-            let all-numbers = query(<rendered-figure-number>)
-            let index = all-figs.position(f => f.location() == elem.location())
-            let numbered = all-numbers.at(index).value
-            let prefix = if numbered != none { numbered + "." } else { "" }
+            let loc = elem.location()
 
-            link(elem.location(), it.indented(prefix, it.inner()))
+            // Indent figures one level below the closest preceding heading
+            // that is actually part of the outline. Figures before the first
+            // heading stay at the top level.
+            let level = if indent_figures {
+                let enclosing = query(
+                    selector(heading.where(outlined: true)).before(loc),
+                )
+                if enclosing.len() == 0 { 1 } else { enclosing.last().level + 1 }
+            } else { it.level }
+
+            let entry = outline.entry(level, elem, fill: it.fill)
+
+            // Look the number up by location. Unnumbered figures have no
+            // metadata and fall back to the stock prefix.
+            let prefix = if hide_figure_sup {
+                let found = query(<rendered-figure-number>).find(
+                    m => m.value.loc == loc,
+                )
+                if found == none { entry.prefix() } else {
+                    [#found.value.number#hidden_sup_separator]
+                }
+            } else { entry.prefix() }
+
+            link(loc, entry.indented(prefix, entry.inner()))
         }
-    } else { it }
+    }
 
     set outline.entry(fill: fill)
     outline(
