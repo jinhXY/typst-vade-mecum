@@ -86,7 +86,7 @@
     show figure.where(kind: kind): set align(alignment)
     show figure.where(kind: kind): set block(breakable: breakable)
     show figure.where(kind: kind): set figure(numbering: number_pattern)
-    show heading: reset-counter(counter(figure.where(kind: kind)))
+    show heading: reset-counter(counter(figure.where(kind: kind)), levels: levels)
 
     doc
 }

@@ -6,6 +6,7 @@
     math-font: "New Computer Modern Math",
     code-font: "DejaVu Sans Mono",
     font: "Libertinus Serif",
+    math-counter-levels: 1,
 )
 #show: template
 
